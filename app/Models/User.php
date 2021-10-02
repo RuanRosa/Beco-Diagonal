@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class User extends Model
 {
+    protected $table = "users";
+
     public $fillable = [
         'name',
         'cpf',
@@ -20,4 +23,5 @@ class User extends Model
         'email' => 'string',
         'password' => 'string'
     ];
+
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\UserRepository;
+use http\Env\Request;
 use http\Exception;
 
 class UserService
@@ -19,6 +20,19 @@ class UserService
     public function GetAll()
     {
         $users = $this->repository->GetAll();
+
+        return $users;
+    }
+
+    public function Create($userRequest)
+    {
+        $userData = $this->repository->validadeUserExistsData($userRequest);
+
+        if (isset($userData)) {
+            return $userData;
+        }
+
+        $users = $this->repository->Create($userRequest);
 
         return $users;
     }
