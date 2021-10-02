@@ -9,9 +9,11 @@ use Utilities\ResponseError;
 
 class ResponseUserError
 {
+    public bool $exits;
     public string $error;
     public int $statusCode;
 }
+
 
 class UserRepository
 {
@@ -27,10 +29,17 @@ class UserRepository
         $this->responseError = $responseError;
     }
 
-    public function GetAll()
+    public function getAll()
     {
         try {
             $users = $this->userModel::all();
+
+            if (!$users->count()) {
+                $this->responseError->error = 'Users Not Found';
+                $this->responseError->statusCode = 404;
+
+                return $this->responseError;
+            }
             return $users;
         }
         catch (\Exception $err) {
@@ -41,7 +50,7 @@ class UserRepository
         }
     }
 
-    public function Create($userRequest)
+    public function create($userRequest)
     {
         DB::beginTransaction();
         try {
@@ -98,6 +107,55 @@ class UserRepository
 
         }
         catch (\Exception $err) {
+            $this->responseError->error = $err->getMessage();
+            $this->responseError->statusCode = 500;
+
+            return $this->responseError;
+        }
+    }
+
+    public function find(int $userId)
+    {
+        try {
+            $user = $this->userModel::Find($userId);
+
+            if ($user) {
+                $this->responseError->error = 'User not found';
+                $this->responseError->statusCode = 404;
+
+                return $this->responseError;
+            }
+
+        }
+        catch (\Exception $err) {
+            $this->responseError->error = $err->getMessage();
+            $this->responseError->statusCode = 500;
+
+            return $this->responseError;
+        }
+    }
+
+    public function delete(int $userId)
+    {
+        DB::beginTransaction();
+        try {
+            $user = $this->userModel
+                ->find($userId);
+
+            if (!$user) {
+                $this->responseError->error = "User Not Found";
+                $this->responseError->statusCode = 404;
+
+                return $this->responseError;
+            }
+
+            $user->delete();
+            DB::commit();
+            return $user;
+
+        }
+        catch (\Exception $err) {
+            DB::rollBack();
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 

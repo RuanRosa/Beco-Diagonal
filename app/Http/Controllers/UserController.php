@@ -15,20 +15,20 @@ class UserController extends Controller
     private $bodyValidators;
 
     public function __construct(
-            Request $request,
-            UserService $service,
-            BodyValidators $bodyValidators
-        )
+        Request        $request,
+        UserService    $service,
+        BodyValidators $bodyValidators
+    )
     {
         $this->request = $request;
         $this->service = $service;
         $this->bodyValidators = $bodyValidators;
     }
 
-    public function GetAll()
+    public function getAll()
     {
         $users = $this->service
-            ->GetAll();
+            ->getAll();
 
         if (isset($users->error)) {
             return response()->json(
@@ -41,7 +41,7 @@ class UserController extends Controller
         );
     }
 
-    public function Create()
+    public function create()
     {
         $body = $this->bodyValidators
             ->User($this->request);
@@ -53,7 +53,7 @@ class UserController extends Controller
         }
 
         $users = $this->service
-            ->Create($this->request);
+            ->create($this->request);
 
         if (isset($users->error)) {
             return response()->json(
@@ -66,4 +66,21 @@ class UserController extends Controller
         );
     }
 
+    public function delete()
+    {
+        $userId = $this->request->id;
+
+        $users = $this->service
+            ->delete($userId);
+
+        if (isset($users->error)) {
+            return response()->json(
+                ["error" => $users->error], $users->statusCode
+            );
+        }
+
+        return response()->json(
+            $users, 200
+        );
+    }
 }
