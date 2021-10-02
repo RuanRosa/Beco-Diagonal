@@ -9,7 +9,7 @@ use Utilities\ResponseError;
 
 class ResponseUserError
 {
-    public bool $exits;
+    public bool $exitsError;
     public string $error;
     public int $statusCode;
 }
@@ -119,12 +119,14 @@ class UserRepository
         try {
             $user = $this->userModel::Find($userId);
 
-            if ($user) {
+            if ($user == null) {
+                $this->responseError->exitsError = true;
                 $this->responseError->error = 'User not found';
                 $this->responseError->statusCode = 404;
 
                 return $this->responseError;
             }
+            return $user;
 
         }
         catch (\Exception $err) {

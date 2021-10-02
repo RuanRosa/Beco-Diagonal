@@ -48,4 +48,12 @@ class UserService
 
         return $userDelete;
     }
+
+    public function show(int $userId)
+    {
+        $user = $this->repository
+            ->find($userId);
+        
+        return $user;
+    }
 }

@@ -41,6 +41,22 @@ class UserController extends Controller
         );
     }
 
+    public function show()
+    {
+        $user = $this->service
+            ->show($this->request->id);
+
+        if (isset($user->error)) {
+            return response()->json(
+                ["error" => $user->error], $user->statusCode
+            );
+        }
+
+        return response()->json(
+            $user, 200
+        );
+    }
+
     public function create()
     {
         $body = $this->bodyValidators
@@ -70,17 +86,17 @@ class UserController extends Controller
     {
         $userId = $this->request->id;
 
-        $users = $this->service
+        $user = $this->service
             ->delete($userId);
 
-        if (isset($users->error)) {
+        if (isset($user->error)) {
             return response()->json(
-                ["error" => $users->error], $users->statusCode
+                ["error" => $user->error], $user->statusCode
             );
         }
 
         return response()->json(
-            $users, 200
+            $user, 200
         );
     }
 }
