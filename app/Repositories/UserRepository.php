@@ -78,15 +78,45 @@ class UserRepository
         }
     }
 
+    public function update($userRequest)
+    {
+        DB::beginTransaction();
+        try {
+            $user = $this->userModel
+                ->find($userRequest->id);
+
+            $user->name = $userRequest->name;
+            $user->cpf  = $userRequest->cpf;
+            $user->email = $userRequest->email;
+            $user->password = $userRequest->password;
+            $user->save();
+
+            DB::commit();
+            return $user;
+
+        }
+        catch (\Exception $err) {
+            DB::rollBack();
+            $this->responseError->error = $err->getMessage();
+            $this->responseError->statusCode = 500;
+
+            return $this->responseError;
+        }
+    }
+
     public function validadeUserExistsData($userRequest)
     {
         try {
             $cpfValidate = $this->userModel
                 ->where('cpf', $userRequest->cpf)
-                ->get()
-                ->count();
+                ->first();
+
 
             if ($cpfValidate) {
+                if ($cpfValidate->id == $userRequest->id) {
+                    return null;
+                }
+
                 $this->responseError->error = 'CPF alredy exists';
                 $this->responseError->statusCode = 400;
 
@@ -95,10 +125,14 @@ class UserRepository
 
             $emailValidate = $this->userModel
                 ->where('email', $userRequest->email)
-                ->get()
-                ->count();
+                ->first();
+
 
             if ($emailValidate) {
+                if ($emailValidate->id == $userRequest->id) {
+                    return null;
+                }
+
                 $this->responseError->error = 'E-mail alredy exists';
                 $this->responseError->statusCode = 400;
 

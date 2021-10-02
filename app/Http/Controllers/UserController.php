@@ -82,6 +82,31 @@ class UserController extends Controller
         );
     }
 
+    public function update()
+    {
+        $body = $this->bodyValidators
+            ->User($this->request);
+
+        if ($body) {
+            return response()->json(
+                $body->errors(), 400
+            );
+        }
+
+        $user = $this->service
+            ->update($this->request);
+
+        if (isset($user->error)) {
+            return response()->json(
+                ["error" => $user->error], $user->statusCode
+            );
+        }
+
+        return response()->json(
+            $user, 200
+        );
+    }
+
     public function delete()
     {
         $userId = $this->request->id;

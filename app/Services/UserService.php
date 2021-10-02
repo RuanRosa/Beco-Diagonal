@@ -26,6 +26,14 @@ class UserService
         return $users;
     }
 
+    public function show(int $userId)
+    {
+        $user = $this->repository
+            ->find($userId);
+
+        return $user;
+    }
+
     public function create($userRequest)
     {
         $userData = $this->repository
@@ -41,6 +49,29 @@ class UserService
         return $users;
     }
 
+    public function update($userRequest)
+    {
+        $userExits = $this->repository
+            ->find($userRequest->id);
+
+        if ($userExits->error) {
+            return $userExits;
+        }
+
+        $userData = $this->repository
+            ->validadeUserExistsData($userRequest);
+
+        if (isset($userData)) {
+            return $userData;
+        }
+
+        $update = $this->repository
+            ->update($userRequest);
+
+        return $update;
+
+    }
+
     public function delete(int $userId)
     {
         $userDelete = $this->repository
@@ -49,11 +80,4 @@ class UserService
         return $userDelete;
     }
 
-    public function show(int $userId)
-    {
-        $user = $this->repository
-            ->find($userId);
-        
-        return $user;
-    }
 }
