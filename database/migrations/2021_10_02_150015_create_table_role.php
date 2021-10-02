@@ -13,11 +13,14 @@ class CreateTableRole extends Migration
      */
     public function up()
     {
-        Schema::create('role', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('role');
+            $table->string('type');
             $table->timestamps();
         });
+
+        $seed = new \Database\Seeders\role_seeder();
+        $seed->run();
     }
 
     /**
@@ -27,6 +30,6 @@ class CreateTableRole extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('roles');
     }
 }

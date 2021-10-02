@@ -1,0 +1,33 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+
+class role_seeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $roles = (object) [
+            [
+                "name" => "shopkeepers"
+            ],
+            [
+                "name" => "common"
+            ]
+        ];
+
+        foreach ($roles as $roleInsert) {
+            $role = new Role();
+            $role->type = $roleInsert['name'];
+            $role->save();
+        }
+    }
+}
