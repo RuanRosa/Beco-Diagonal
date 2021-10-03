@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
-use App\Services\UserService;
+use App\Models\UserRole;
 use Illuminate\Support\Facades\DB;
 use Utilities\ResponseError;
 
@@ -19,20 +19,28 @@ class UserRepository
 {
     private $userModel;
     private $responseError;
+    private $userRole;
 
     public function __construct(
         User $user,
-        ResponseUserError $responseError
+        ResponseUserError $responseError,
+        UserRole $userRoleModel
     )
     {
         $this->userModel = $user;
         $this->responseError = $responseError;
+        $this->userRole = $userRoleModel;
     }
 
     public function getAll()
     {
         try {
-            $users = $this->userModel::all();
+            $users = $this->userModel
+                ->get();
+
+            foreach ($users as $user) {
+                $user->userRole->roles;
+            }
 
             if (!$users->count()) {
                 $this->responseError->error = 'Users Not Found';
@@ -54,7 +62,6 @@ class UserRepository
     {
         DB::beginTransaction();
         try {
-
             $users = $this->userModel;
 
             $users = $users::create(
@@ -65,6 +72,17 @@ class UserRepository
                     "password" => $userRequest->password
                 ]
             );
+
+            $this->userRole::create(
+                [
+                    "user_id" => $users->id,
+                    "role_id" => $userRequest->role_id
+                ]
+            );
+
+            foreach ($users as $user) {
+                $users->userRole->roles;
+            }
 
             DB::commit();
             return $users;
@@ -90,6 +108,15 @@ class UserRepository
             $user->email = $userRequest->email;
             $user->password = $userRequest->password;
             $user->save();
+
+            $userRole = $this->userRole
+                ->where('user_id', $userRequest->id)
+                ->first();
+
+            $userRole->role_id = $userRequest->role_id;
+            $userRole->save();
+
+            $user->userRole->roles;
 
             DB::commit();
             return $user;
@@ -151,7 +178,7 @@ class UserRepository
     public function find(int $userId)
     {
         try {
-            $user = $this->userModel::Find($userId);
+            $user = $this->userModel->Find($userId);
 
             if ($user == null) {
                 $this->responseError->exitsError = true;
@@ -160,6 +187,8 @@ class UserRepository
 
                 return $this->responseError;
             }
+            $user->userRole->roles;
+
             return $user;
 
         }
@@ -184,7 +213,7 @@ class UserRepository
 
                 return $this->responseError;
             }
-
+            $user->userRole->roles;
             $user->delete();
             DB::commit();
             return $user;

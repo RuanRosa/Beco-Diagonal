@@ -11,7 +11,8 @@ class BodyValidators
             'name' => 'required',
             'email' => 'required',
             'cpf' => 'required',
-            'password' => 'required'
+            'password' => 'required',
+            'role_id' => 'required'
         ]);
 
         if ($validator->fails()) {

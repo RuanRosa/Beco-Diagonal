@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\UserRepository;
+use App\Http\Resources\User;
 use App\Services\UserService;
 use App\Utilities\BodyValidators;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -36,8 +35,10 @@ class UserController extends Controller
             );
         }
 
+        $dto = User::collection($users);
+
         return response()->json(
-            $users, 200
+            $dto, 200
         );
     }
 
@@ -52,33 +53,37 @@ class UserController extends Controller
             );
         }
 
+        $dto = new User($user);
+
         return response()->json(
-            $user, 200
+            $dto, 200
         );
     }
 
     public function create()
     {
-        $body = $this->bodyValidators
+        $bodyErr = $this->bodyValidators
             ->User($this->request);
 
-        if ($body) {
+        if ($bodyErr) {
             return response()->json(
-                $body->errors(), 400
+                $bodyErr->errors(), 400
             );
         }
 
-        $users = $this->service
+        $user = $this->service
             ->create($this->request);
 
-        if (isset($users->error)) {
+        if (isset($user->error)) {
             return response()->json(
-                ["error" => $users->error], $users->statusCode
+                ["error" => $user->error], $user->statusCode
             );
         }
 
+        $dto = new User($user);
+
         return response()->json(
-            $users, 200
+            $dto, 200
         );
     }
 
@@ -102,8 +107,10 @@ class UserController extends Controller
             );
         }
 
+        $dto = new User($user);
+
         return response()->json(
-            $user, 200
+            $dto, 200
         );
     }
 
@@ -120,8 +127,10 @@ class UserController extends Controller
             );
         }
 
+        $dto = new User($user);
+
         return response()->json(
-            $user, 200
+            $dto, 200
         );
     }
 }

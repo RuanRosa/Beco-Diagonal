@@ -9,6 +9,11 @@ class User extends Model
 {
     protected $table = "users";
 
+    public function userRole()
+    {
+        return $this->hasOne(UserRole::class, 'user_id', 'id');
+    }
+
     public $fillable = [
         'name',
         'cpf',

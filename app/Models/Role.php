@@ -9,6 +9,12 @@ class Role extends Model
 {
     protected $table = "roles";
 
+    public function roleUser()
+    {
+        return $this->belongsTo(UserRole::class, 'role_io', 'id');
+    }
+
+
     public $fillable = [
         'type'
     ];
