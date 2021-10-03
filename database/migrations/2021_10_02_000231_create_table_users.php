@@ -1,21 +1,10 @@
 <?php
 
-namespace database\Migrations;
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class CreateTableUsers extends Migration
 {
-    private $schema;
-
-    public function __construct(
-        Schema $schema
-    ) {
-        $this->schema = $schema;
-    }
-
     public function upTable()
     {
         $this->schema
@@ -36,11 +25,6 @@ class CreateTableUsers extends Migration
             });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function downTable()
     {
         $this->schema

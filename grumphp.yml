@@ -2,6 +2,7 @@ grumphp:
     tasks:
       phpcs:
         standard: ['PSR12']
+        ignore_patterns: [database];
       phpmd:
         whitelist_patterns: []
         exclude: []
