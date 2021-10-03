@@ -5,10 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateTableUsersRole extends Migration
 {
-    public function upTable()
+    public function up()
     {
-        $this->schema
-            ->create('users_role', function (Blueprint $table) {
+        Schema::create('users_role', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('user_id');
                 $table->unsignedBigInteger('role_id');
@@ -34,9 +33,8 @@ class CreateTableUsersRole extends Migration
      *
      * @return void
      */
-    public function downTable()
+    public function down()
     {
-        $this->schema
-            ->dropIfExists('users_role');
+        Schema::dropIfExists('users_role');
     }
 }

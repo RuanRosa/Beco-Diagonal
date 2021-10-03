@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\User;
+use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use App\Utilities\BodyValidators;
 use Illuminate\Http\Request;
@@ -12,18 +12,15 @@ class UserController extends Controller
     private $request;
     private $service;
     private $bodyValidators;
-    private $userResource;
 
     public function __construct(
         Request $request,
         UserService $service,
-        BodyValidators $bodyValidators,
-        User $userResource
+        BodyValidators $bodyValidators
     ) {
         $this->request = $request;
         $this->service = $service;
         $this->bodyValidators = $bodyValidators;
-        $this->userResource = $userResource;
     }
 
     public function getAll()

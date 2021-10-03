@@ -3,14 +3,13 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\database\Seeders\RoleSeeder;
+use Database\Seeders\RoleSeeder;
 
 class CreateTableRole extends Migration
 {
-    public function upTable()
+    public function up()
     {
-        $this->schema
-            ->create('roles', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
                 $table->id();
                 $table->string('type');
                 $table->timestamps();
@@ -25,9 +24,8 @@ class CreateTableRole extends Migration
      *
      * @return void
      */
-    public function downTable()
+    public function down()
     {
-        $this->schema
-            ->dropIfExists('roles');
+        Schema::dropIfExists('roles');
     }
 }

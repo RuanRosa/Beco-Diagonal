@@ -5,10 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateTableUsers extends Migration
 {
-    public function upTable()
+    public function up()
     {
-        $this->schema
-            ->create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
                 $table->id();
 
                 $table->string('name');
@@ -25,9 +24,8 @@ class CreateTableUsers extends Migration
             });
     }
 
-    public function downTable()
+    public function down()
     {
-        $this->schema
-            ->dropIfExists('users');
+        Schema::dropIfExists('users');
     }
 }
