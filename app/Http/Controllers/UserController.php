@@ -12,6 +12,7 @@ class UserController extends Controller
     private $request;
     private $service;
     private $bodyValidators;
+    private $userResource;
 
     public function __construct(
         Request $request,
@@ -35,8 +36,8 @@ class UserController extends Controller
             );
         }
 
-        $dto = $this->userResource
-            ->collection($users);
+
+        $dto = UserResource::collection($users);
 
         return response()->json(
             $dto,
@@ -56,7 +57,7 @@ class UserController extends Controller
             );
         }
 
-        $dto = new User($user);
+        $dto = new UserResource($user);
 
         return response()->json(
             $dto,
@@ -86,7 +87,7 @@ class UserController extends Controller
             );
         }
 
-        $dto = new User($user);
+        $dto = new UserResource($user);
 
         return response()->json(
             $dto,
@@ -116,7 +117,7 @@ class UserController extends Controller
             );
         }
 
-        $dto = new User($user);
+        $dto = new UserResource($user);
 
         return response()->json(
             $dto,
@@ -138,7 +139,7 @@ class UserController extends Controller
             );
         }
 
-        $dto = new User($user);
+        $dto = new UserResource($user);
 
         return response()->json(
             $dto,

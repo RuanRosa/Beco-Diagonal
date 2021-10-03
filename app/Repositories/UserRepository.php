@@ -53,8 +53,8 @@ class UserRepository
 
     public function create($userRequest)
     {
-        $this->IDB
-            ->beginTransaction();
+        DB::beginTransaction();
+
         try {
             $users = $this->userModel;
 
@@ -78,12 +78,10 @@ class UserRepository
                 $users->userRole->roles;
             }
 
-            $this->IDB
-                ->commit();
+            DB::commit();
             return $users;
         } catch (\Exception $err) {
-            $this->IDB
-                ->rollBack();
+            DB::rollBack();
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
@@ -93,8 +91,7 @@ class UserRepository
 
     public function update($userRequest)
     {
-        $this->IDB
-            ->beginTransaction();
+        DB::beginTransaction();
         try {
             $user = $this->userModel
                 ->find($userRequest->id);
@@ -114,12 +111,10 @@ class UserRepository
 
             $user->userRole->roles;
 
-            $this->IDB
-                ->commit();
+            DB::commit();
             return $user;
         } catch (\Exception $err) {
-            $this->IDB
-                ->rollBack();
+               DB::rollBack();
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
@@ -194,8 +189,7 @@ class UserRepository
 
     public function delete(int $userId)
     {
-        $this->IDB
-            ->beginTransaction();
+        DB::beginTransaction();
         try {
             $user = $this->userModel
                 ->find($userId);
@@ -208,12 +202,10 @@ class UserRepository
             }
             $user->userRole->roles;
             $user->delete();
-            $this->IDB
-                ->commit();
+            DB::commit();
             return $user;
         } catch (\Exception $err) {
-            $this->IDB
-                ->rollBack();
+            DB::rollBack();
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
