@@ -1,33 +1,39 @@
 <?php
 
+namespace database\Migrations;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateTableUsers extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    private $schema;
+
+    public function __construct(
+        Schema $schema
+    ) {
+        $this->schema = $schema;
+    }
+
+    public function upTable()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
+        $this->schema
+            ->create('users', function (Blueprint $table) {
+                $table->id();
 
-            $table->string('name');
+                $table->string('name');
 
-            $table->integer('cpf')
-                ->unique();
+                $table->integer('cpf')
+                    ->unique();
 
-            $table->string('email')
-                ->unique();
+                $table->string('email')
+                    ->unique();
 
-            $table->string('password');
+                $table->string('password');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
     }
 
     /**
@@ -35,8 +41,9 @@ class CreateTableUsers extends Migration
      *
      * @return void
      */
-    public function down()
+    public function downTable()
     {
-        Schema::dropIfExists('users');
+        $this->schema
+            ->dropIfExists('users');
     }
 }

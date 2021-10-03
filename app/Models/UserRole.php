@@ -30,5 +30,4 @@ class UserRole extends Model
         'user_id' => 'integer',
         'role_id' => 'integer',
     ];
-
 }

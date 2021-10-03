@@ -12,16 +12,18 @@ class UserController extends Controller
     private $request;
     private $service;
     private $bodyValidators;
+    private $userResource;
 
     public function __construct(
-        Request        $request,
-        UserService    $service,
-        BodyValidators $bodyValidators
-    )
-    {
+        Request $request,
+        UserService $service,
+        BodyValidators $bodyValidators,
+        User $userResource
+    ) {
         $this->request = $request;
         $this->service = $service;
         $this->bodyValidators = $bodyValidators;
+        $this->userResource = $userResource;
     }
 
     public function getAll()
@@ -31,14 +33,17 @@ class UserController extends Controller
 
         if (isset($users->error)) {
             return response()->json(
-                ["error" => $users->error], $users->statusCode
+                ["error" => $users->error],
+                $users->statusCode
             );
         }
 
-        $dto = User::collection($users);
+        $dto = $this->userResource
+            ->collection($users);
 
         return response()->json(
-            $dto, 200
+            $dto,
+            200
         );
     }
 
@@ -49,14 +54,16 @@ class UserController extends Controller
 
         if (isset($user->error)) {
             return response()->json(
-                ["error" => $user->error], $user->statusCode
+                ["error" => $user->error],
+                $user->statusCode
             );
         }
 
         $dto = new User($user);
 
         return response()->json(
-            $dto, 200
+            $dto,
+            200
         );
     }
 
@@ -67,7 +74,8 @@ class UserController extends Controller
 
         if ($bodyErr) {
             return response()->json(
-                $bodyErr->errors(), 400
+                $bodyErr->errors(),
+                400
             );
         }
 
@@ -76,14 +84,16 @@ class UserController extends Controller
 
         if (isset($user->error)) {
             return response()->json(
-                ["error" => $user->error], $user->statusCode
+                ["error" => $user->error],
+                $user->statusCode
             );
         }
 
         $dto = new User($user);
 
         return response()->json(
-            $dto, 200
+            $dto,
+            200
         );
     }
 
@@ -94,7 +104,8 @@ class UserController extends Controller
 
         if ($body) {
             return response()->json(
-                $body->errors(), 400
+                $body->errors(),
+                400
             );
         }
 
@@ -103,14 +114,16 @@ class UserController extends Controller
 
         if (isset($user->error)) {
             return response()->json(
-                ["error" => $user->error], $user->statusCode
+                ["error" => $user->error],
+                $user->statusCode
             );
         }
 
         $dto = new User($user);
 
         return response()->json(
-            $dto, 200
+            $dto,
+            200
         );
     }
 
@@ -123,14 +136,16 @@ class UserController extends Controller
 
         if (isset($user->error)) {
             return response()->json(
-                ["error" => $user->error], $user->statusCode
+                ["error" => $user->error],
+                $user->statusCode
             );
         }
 
         $dto = new User($user);
 
         return response()->json(
-            $dto, 200
+            $dto,
+            200
         );
     }
 }

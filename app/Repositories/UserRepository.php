@@ -5,31 +5,25 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\DB;
-use Utilities\ResponseError;
-
-class ResponseUserError
-{
-    public bool $exitsError;
-    public string $error;
-    public int $statusCode;
-}
-
+use App\Utilities\ResponseUserError;
 
 class UserRepository
 {
     private $userModel;
     private $responseError;
     private $userRole;
+    private $IDB;
 
     public function __construct(
         User $user,
         ResponseUserError $responseError,
-        UserRole $userRoleModel
-    )
-    {
+        UserRole $userRoleModel,
+        DB $IDB
+    ) {
         $this->userModel = $user;
         $this->responseError = $responseError;
         $this->userRole = $userRoleModel;
+        $this->IDB = $IDB;
     }
 
     public function getAll()
@@ -49,8 +43,7 @@ class UserRepository
                 return $this->responseError;
             }
             return $users;
-        }
-        catch (\Exception $err) {
+        } catch (\Exception $err) {
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
@@ -60,7 +53,8 @@ class UserRepository
 
     public function create($userRequest)
     {
-        DB::beginTransaction();
+        $this->IDB
+            ->beginTransaction();
         try {
             $users = $this->userModel;
 
@@ -84,11 +78,12 @@ class UserRepository
                 $users->userRole->roles;
             }
 
-            DB::commit();
+            $this->IDB
+                ->commit();
             return $users;
-        }
-        catch (\Exception $err) {
-            DB::rollBack();
+        } catch (\Exception $err) {
+            $this->IDB
+                ->rollBack();
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
@@ -98,7 +93,8 @@ class UserRepository
 
     public function update($userRequest)
     {
-        DB::beginTransaction();
+        $this->IDB
+            ->beginTransaction();
         try {
             $user = $this->userModel
                 ->find($userRequest->id);
@@ -118,12 +114,12 @@ class UserRepository
 
             $user->userRole->roles;
 
-            DB::commit();
+            $this->IDB
+                ->commit();
             return $user;
-
-        }
-        catch (\Exception $err) {
-            DB::rollBack();
+        } catch (\Exception $err) {
+            $this->IDB
+                ->rollBack();
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
@@ -165,9 +161,7 @@ class UserRepository
 
                 return $this->responseError;
             }
-
-        }
-        catch (\Exception $err) {
+        } catch (\Exception $err) {
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
@@ -190,9 +184,7 @@ class UserRepository
             $user->userRole->roles;
 
             return $user;
-
-        }
-        catch (\Exception $err) {
+        } catch (\Exception $err) {
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 
@@ -202,7 +194,8 @@ class UserRepository
 
     public function delete(int $userId)
     {
-        DB::beginTransaction();
+        $this->IDB
+            ->beginTransaction();
         try {
             $user = $this->userModel
                 ->find($userId);
@@ -215,12 +208,12 @@ class UserRepository
             }
             $user->userRole->roles;
             $user->delete();
-            DB::commit();
+            $this->IDB
+                ->commit();
             return $user;
-
-        }
-        catch (\Exception $err) {
-            DB::rollBack();
+        } catch (\Exception $err) {
+            $this->IDB
+                ->rollBack();
             $this->responseError->error = $err->getMessage();
             $this->responseError->statusCode = 500;
 

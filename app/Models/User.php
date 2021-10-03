@@ -28,5 +28,4 @@ class User extends Model
         'email' => 'string',
         'password' => 'string'
     ];
-
 }

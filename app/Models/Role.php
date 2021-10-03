@@ -23,5 +23,4 @@ class Role extends Model
         'id' => 'integer',
         'type' => 'string',
     ];
-
 }

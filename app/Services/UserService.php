@@ -10,8 +10,7 @@ class UserService
 
     public function __construct(
         UserRepository $repository
-    )
-    {
+    ) {
         $this->repository = $repository;
     }
 
@@ -66,7 +65,6 @@ class UserService
             ->update($userRequest);
 
         return $update;
-
     }
 
     public function delete(int $userId)
@@ -76,5 +74,4 @@ class UserService
 
         return $userDelete;
     }
-
 }

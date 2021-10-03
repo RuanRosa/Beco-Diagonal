@@ -6,8 +6,17 @@ use Illuminate\Support\Facades\Validator;
 
 class BodyValidators
 {
-    public function User($userRequest) {
-        $validator = Validator::make($userRequest->all(), [
+    private $validator;
+
+    public function __construct(
+        Validator $validator
+    ) {
+        $this->validator = $validator;
+    }
+
+    public function user($userRequest)
+    {
+        $validator = $this->validator->make($userRequest->all(), [
             'name' => 'required',
             'email' => 'required',
             'cpf' => 'required',
@@ -19,5 +28,4 @@ class BodyValidators
             return $validator;
         }
     }
-
 }
