@@ -7,7 +7,7 @@ grumphp:
         whitelist_patterns: []
         exclude: []
         report_format: text
-        ruleset: ['cleancode', 'codesize', 'naming']
+        ruleset: ['cleancode', 'codesize', 'naming', 'controversial', 'design', 'unusedcode']
         triggered_by: ['php']
       phpmnd:
         directory: .

@@ -19,7 +19,7 @@ class TransactionService
         $this->responseError = $responseError;
     }
 
-    public function transfer($transferRequest)
+    public function transfer()
     {
     }
 }

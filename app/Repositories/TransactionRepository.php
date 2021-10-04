@@ -38,18 +38,7 @@ class TransactionRepository
         dd($transactionModel);
     }
 
-    public function transfer($transferRequest)
+    public function transfer()
     {
-        DB::beginTransaction();
-        try {
-            DB::commit();
-//            return $transaction;
-        } catch (\Exception $err) {
-            DB::rollBack();
-            $this->responseError->error = $err->getMessage();
-            $this->responseError->statusCode = 500;
-
-            return $this->responseError;
-        }
     }
 }
