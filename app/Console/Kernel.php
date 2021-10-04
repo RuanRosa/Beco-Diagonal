@@ -5,6 +5,12 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -22,7 +28,7 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule()
+    protected function schedule(Schedule $schedule)
     {
         //
     }
