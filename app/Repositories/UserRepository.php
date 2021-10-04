@@ -8,6 +8,12 @@ use App\Models\UserRole;
 use Illuminate\Support\Facades\DB;
 use App\Utilities\ResponseError;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+
 class UserRepository
 {
     private $userModel;
@@ -16,10 +22,10 @@ class UserRepository
     private $transactionModel;
 
     public function __construct(
-        User          $user,
+        User $user,
         ResponseError $responseError,
-        UserRole      $userRoleModel,
-        Transaction   $transactionModel
+        UserRole $userRoleModel,
+        Transaction $transactionModel
     ) {
         $this->userModel = $user;
         $this->transactionModel = $transactionModel;
@@ -150,7 +156,6 @@ class UserRepository
             }
 
             return false;
-
         } catch (\Exception $err) {
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;

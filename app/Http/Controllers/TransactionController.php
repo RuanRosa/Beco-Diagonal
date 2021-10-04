@@ -8,23 +8,23 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    private $transactionBodyValidator;
+    private $transBodyValidator;
     private $request;
     private $transactionService;
 
     public function __construct(
-        TransactionBodyValidator $transactionBodyValidator,
+        TransactionBodyValidator $transBodyValidator,
         Request $request,
         TransactionService $transactionService
     ) {
         $this->request = $request;
-        $this->transactionBodyValidator = $transactionBodyValidator;
+        $this->transBodyValidator = $transBodyValidator;
         $this->transactionService = $transactionService;
     }
 
     public function transfer()
     {
-        $bodyErr = $this->transactionBodyValidator
+        $bodyErr = $this->transBodyValidator
             ->transaction($this->request);
 
         if ($bodyErr) {

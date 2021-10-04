@@ -8,32 +8,18 @@ use App\Utilities\ResponseError;
 
 class TransactionService
 {
-    private $transactionRepository;
+    private $transRepository;
     private $responseError;
 
     public function __construct(
-        TransactionRepository $TransactionRepository,
+        TransactionRepository $transRepository,
         ResponseError $responseError
     ) {
-        $this->transactionRepository = $TransactionRepository;
+        $this->transRepository = $transRepository;
         $this->responseError = $responseError;
     }
 
     public function transfer($transferRequest)
     {
-        $transferRules = $this->transactionRepository
-            ->rules($transferRequest);
-
-        if (isset($transferRules->validateError)) {
-            if ($transferRules->typeError == 'transferYourself') {
-                $this->responseError->error = 'you can\'t transfer money to yourself';
-                $this->responseError->statusCode = 400;
-                return $this->responseError;
-            }
-
-        }
-
-        $this->transactionRepository
-            ->transfer($transferRequest);
     }
 }

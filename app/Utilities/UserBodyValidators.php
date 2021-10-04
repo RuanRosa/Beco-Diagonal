@@ -4,6 +4,12 @@ namespace App\Utilities;
 
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+
 class UserBodyValidators
 {
     public function user($userRequest)

@@ -6,6 +6,12 @@ use App\Models\Transaction;
 use App\Utilities\ResponseError;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+
 class TransactionRepository
 {
     private $transactionModel;
@@ -30,14 +36,12 @@ class TransactionRepository
         $transactionModel->Find($transferRequest->payee);
 
         dd($transactionModel);
-
     }
 
     public function transfer($transferRequest)
     {
         DB::beginTransaction();
         try {
-
             DB::commit();
 //            return $transaction;
         } catch (\Exception $err) {

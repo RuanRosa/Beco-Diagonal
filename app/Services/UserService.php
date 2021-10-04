@@ -5,6 +5,12 @@ namespace App\Services;
 use App\Repositories\UserRepository;
 use App\Utilities\ResponseError;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+
 class UserService
 {
     private $repository;
@@ -12,7 +18,7 @@ class UserService
 
     public function __construct(
         UserRepository $repository,
-        ResponseError  $responseError
+        ResponseError $responseError
     ) {
         $this->repository = $repository;
         $this->error = $responseError;

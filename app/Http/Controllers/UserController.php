@@ -7,6 +7,12 @@ use App\Services\UserService;
 use App\Utilities\UserBodyValidators;
 use Illuminate\Http\Request;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+
 class UserController extends Controller
 {
     private $request;
