@@ -4,7 +4,7 @@ namespace App\Utilities;
 
 use Illuminate\Support\Facades\Validator;
 
-class BodyValidators
+class UserBodyValidators
 {
     public function user($userRequest)
     {

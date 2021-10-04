@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Services\UserService;
-use App\Utilities\BodyValidators;
+use App\Utilities\UserBodyValidators;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -12,12 +12,11 @@ class UserController extends Controller
     private $request;
     private $service;
     private $bodyValidators;
-    private $userResource;
 
     public function __construct(
         Request $request,
         UserService $service,
-        BodyValidators $bodyValidators
+        UserBodyValidators $bodyValidators
     ) {
         $this->request = $request;
         $this->service = $service;
@@ -29,13 +28,19 @@ class UserController extends Controller
         $users = $this->service
             ->getAll();
 
-        if (isset($users->error)) {
+        if (isset($users->internalError)) {
             return response()->json(
-                ["error" => $users->error],
-                $users->statusCode
+                ["error" => $users->internalError],
+                500
             );
         }
 
+        if (isset($users->error)) {
+            return response()->json(
+                ["error" => $users->msg],
+                $users->statusCode
+            );
+        }
 
         $dto = UserResource::collection($users);
 
@@ -50,13 +55,19 @@ class UserController extends Controller
         $user = $this->service
             ->show($this->request->id);
 
-        if (isset($user->error)) {
+        if (isset($user->internalError)) {
             return response()->json(
-                ["error" => $user->error],
-                $user->statusCode
+                ["error" => $user->internalError],
+                500
             );
         }
 
+        if (isset($user->error)) {
+            return response()->json(
+                ["error" => $user->msg],
+                $user->statusCode
+            );
+        }
         $dto = new UserResource($user);
 
         return response()->json(
@@ -77,17 +88,25 @@ class UserController extends Controller
             );
         }
 
-        $user = $this->service
+        $userCreate = $this->service
             ->create($this->request);
 
-        if (isset($user->error)) {
+
+        if (isset($userCreate->internalError)) {
             return response()->json(
-                ["error" => $user->error],
-                $user->statusCode
+                ["error" => $userCreate->internalError],
+                500
             );
         }
 
-        $dto = new UserResource($user);
+        if (isset($userCreate->error)) {
+            return response()->json(
+                ["error" => $userCreate->msg],
+                $userCreate->statusCode
+            );
+        }
+
+        $dto = new UserResource($userCreate);
 
         return response()->json(
             $dto,
@@ -107,17 +126,24 @@ class UserController extends Controller
             );
         }
 
-        $user = $this->service
+        $userUpdate = $this->service
             ->update($this->request);
 
-        if (isset($user->error)) {
+        if (isset($userUpdate->internalError)) {
             return response()->json(
-                ["error" => $user->error],
-                $user->statusCode
+                ["error" => $userUpdate->internalError],
+                500
             );
         }
 
-        $dto = new UserResource($user);
+        if (isset($userUpdate->error)) {
+            return response()->json(
+                ["error" => $userUpdate->msg],
+                $userUpdate->statusCode
+            );
+        }
+
+        $dto = new UserResource($userUpdate);
 
         return response()->json(
             $dto,

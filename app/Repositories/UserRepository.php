@@ -2,28 +2,29 @@
 
 namespace App\Repositories;
 
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\DB;
-use App\Utilities\ResponseUserError;
+use App\Utilities\ResponseError;
 
 class UserRepository
 {
     private $userModel;
     private $responseError;
     private $userRole;
-    private $IDB;
+    private $transactionModel;
 
     public function __construct(
-        User $user,
-        ResponseUserError $responseError,
-        UserRole $userRoleModel,
-        DB $IDB
+        User          $user,
+        ResponseError $responseError,
+        UserRole      $userRoleModel,
+        Transaction   $transactionModel
     ) {
         $this->userModel = $user;
+        $this->transactionModel = $transactionModel;
         $this->responseError = $responseError;
         $this->userRole = $userRoleModel;
-        $this->IDB = $IDB;
     }
 
     public function getAll()
@@ -36,17 +37,9 @@ class UserRepository
                 $user->userRole->roles;
             }
 
-            if (!$users->count()) {
-                $this->responseError->error = 'Users Not Found';
-                $this->responseError->statusCode = 404;
-
-                return $this->responseError;
-            }
             return $users;
         } catch (\Exception $err) {
-            $this->responseError->error = $err->getMessage();
-            $this->responseError->statusCode = 500;
-
+            $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
     }
@@ -56,9 +49,9 @@ class UserRepository
         DB::beginTransaction();
 
         try {
-            $users = $this->userModel;
+            $user = $this->userModel;
 
-            $users = $users::create(
+            $user = $user::create(
                 [
                     "name" => $userRequest->name,
                     "cpf" => $userRequest->cpf,
@@ -67,24 +60,31 @@ class UserRepository
                 ]
             );
 
-            $this->userRole::create(
+            $userRole = $this->userRole;
+
+            $userRole::create(
                 [
-                    "user_id" => $users->id,
+                    "user_id" => $user->id,
                     "role_id" => $userRequest->role_id
                 ]
             );
 
-            foreach ($users as $user) {
-                $users->userRole->roles;
-            }
+            $transaction = $this->transactionModel;
+
+            $transaction::create(
+                [
+                    "money" => 0,
+                    "user_id" => $user->id,
+                ]
+            );
+
+            $user->userRole->roles;
 
             DB::commit();
-            return $users;
+            return $user;
         } catch (\Exception $err) {
             DB::rollBack();
-            $this->responseError->error = $err->getMessage();
-            $this->responseError->statusCode = 500;
-
+            $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
     }
@@ -114,52 +114,45 @@ class UserRepository
             DB::commit();
             return $user;
         } catch (\Exception $err) {
-               DB::rollBack();
-            $this->responseError->error = $err->getMessage();
-            $this->responseError->statusCode = 500;
-
+            DB::rollBack();
+            $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
     }
 
-    public function validadeUserExistsData($userRequest)
+    public function validateUserExistsData($userRequest)
     {
         try {
-            $cpfValidate = $this->userModel
-                ->where('cpf', $userRequest->cpf)
+            $validate = $this->userModel;
+
+            $cpf = $validate->where('cpf', $userRequest->cpf)
                 ->first();
 
-
-            if ($cpfValidate) {
-                if ($cpfValidate->id == $userRequest->id) {
-                    return null;
+            if ($cpf != null) {
+                if (isset($userRequest->id)) {
+                    if ($userRequest->id == $cpf->id) {
+                        return false;
+                    }
                 }
-
-                $this->responseError->error = 'CPF alredy exists';
-                $this->responseError->statusCode = 400;
-
-                return $this->responseError;
+                return (object) ['cpf' => 'true'];
             }
 
-            $emailValidate = $this->userModel
-                ->where('email', $userRequest->email)
+            $email = $validate->where('email', $userRequest->email)
                 ->first();
 
-
-            if ($emailValidate) {
-                if ($emailValidate->id == $userRequest->id) {
-                    return null;
+            if ($email != null) {
+                if (isset($userRequest->id)) {
+                    if ($userRequest->id == $email->id) {
+                        return false;
+                    }
                 }
-
-                $this->responseError->error = 'E-mail alredy exists';
-                $this->responseError->statusCode = 400;
-
-                return $this->responseError;
+                return (object) ['email' => 'true'];
             }
+
+            return false;
+
         } catch (\Exception $err) {
-            $this->responseError->error = $err->getMessage();
-            $this->responseError->statusCode = 500;
-
+            $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
     }
@@ -169,20 +162,13 @@ class UserRepository
         try {
             $user = $this->userModel->Find($userId);
 
-            if ($user == null) {
-                $this->responseError->exitsError = true;
-                $this->responseError->error = 'User not found';
-                $this->responseError->statusCode = 404;
-
-                return $this->responseError;
+            if ($user != null) {
+                $user->userRole->roles;
             }
-            $user->userRole->roles;
 
             return $user;
         } catch (\Exception $err) {
-            $this->responseError->error = $err->getMessage();
-            $this->responseError->statusCode = 500;
-
+            $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
     }
@@ -193,22 +179,13 @@ class UserRepository
         try {
             $user = $this->userModel
                 ->find($userId);
-
-            if (!$user) {
-                $this->responseError->error = "User Not Found";
-                $this->responseError->statusCode = 404;
-
-                return $this->responseError;
-            }
             $user->userRole->roles;
             $user->delete();
             DB::commit();
             return $user;
         } catch (\Exception $err) {
             DB::rollBack();
-            $this->responseError->error = $err->getMessage();
-            $this->responseError->statusCode = 500;
-
+            $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
     }

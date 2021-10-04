@@ -9,5 +9,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
             $router->put('/{id}', 'UserController@update');
             $router->delete('/{id}', 'UserController@delete');
         });
+
+        $router->group(['prefix' => 'transactions'], function () use ($router) {
+            $router->post('/transfer', 'TransactionController@transfer');
+        });
     });
 });

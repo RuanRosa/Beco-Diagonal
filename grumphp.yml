@@ -1,24 +1,24 @@
-grumphp:
-    tasks:
-      phpcs:
-        standard: ['PSR12']
-        ignore_patterns: [database]
-      phpmd:
-        whitelist_patterns: []
-        exclude: [database]
-        report_format: text
-        ruleset: ['cleancode', 'codesize', 'naming']
-        triggered_by: ['php']
-      phpmnd:
-        directory: .
-        whitelist_patterns: []
-        exclude: []
-        exclude_name: []
-        exclude_path: []
-        extensions: []
-        hint: false
-        ignore_funcs: []
-        ignore_numbers: []
-        ignore_strings: []
-        strings: false
-        triggered_by: ['php']
+#grumphp:
+#    tasks:
+#      phpcs:
+#        standard: ['PSR12']
+#        ignore_patterns: [database]
+#      phpmd:
+#        whitelist_patterns: []
+#        exclude: [database]
+#        report_format: text
+#        ruleset: ['cleancode', 'codesize', 'naming']
+#        triggered_by: ['php']
+#      phpmnd:
+#        directory: .
+#        whitelist_patterns: []
+#        exclude: []
+#        exclude_name: []
+#        exclude_path: []
+#        extensions: []
+#        hint: false
+#        ignore_funcs: []
+#        ignore_numbers: []
+#        ignore_strings: []
+#        strings: false
+#        triggered_by: ['php']

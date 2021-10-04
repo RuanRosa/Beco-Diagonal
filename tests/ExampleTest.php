@@ -14,11 +14,8 @@ class ExampleTest extends TestCase
      */
     public function testExample()
     {
-        $this->get('/');
+        $response = $this->get('api/v1/users');
 
-        $this->assertEquals(
-            $this->app->version(),
-            $this->response->getContent()
-        );
+        $response->assertResponseStatus(404);
     }
 }
