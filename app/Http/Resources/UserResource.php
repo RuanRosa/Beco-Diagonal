@@ -4,9 +4,14 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class UserResource extends JsonResource
 {
-    public function toArray()
+    public function toArray($request)
     {
         return [
             'id'            => $this->id,

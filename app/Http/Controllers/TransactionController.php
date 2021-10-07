@@ -22,6 +22,23 @@ class TransactionController extends Controller
         $this->transactionService = $transactionService;
     }
 
+    private function validateError($dataError)
+    {
+        if (isset($dataError->internalError)) {
+            return response()->json(
+                ["error" => $dataError->internalError],
+                500
+            );
+        }
+
+        if (isset($dataError->error)) {
+            return response()->json(
+                ["error" => $dataError->msg],
+                $dataError->statusCode
+            );
+        }
+    }
+
     public function transfer()
     {
         $bodyErr = $this->transBodyValidator
@@ -38,10 +55,7 @@ class TransactionController extends Controller
             ->transfer($this->request);
 
         if (isset($transfer->error)) {
-            return response()->json(
-                ["error" => $transfer->error],
-                $transfer->statusCode
-            );
+            return $this->validateError($transfer);
         }
     }
 }

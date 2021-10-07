@@ -13,11 +13,6 @@ class User extends Model
         return $this->hasOne(UserRole::class, 'user_id', 'id');
     }
 
-    public function userBank()
-    {
-        return $this->hasOne(UserRole::class, 'user_id', 'id');
-    }
-
     public $fillable = [
         'name',
         'cpf',

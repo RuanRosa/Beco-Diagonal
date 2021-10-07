@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Bank;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserRole;
@@ -19,16 +20,16 @@ class UserRepository
     private $userModel;
     private $responseError;
     private $userRole;
-    private $transactionModel;
+    private $bank;
 
     public function __construct(
         User $user,
         ResponseError $responseError,
         UserRole $userRoleModel,
-        Transaction $transactionModel
+        Bank $bankModel
     ) {
         $this->userModel = $user;
-        $this->transactionModel = $transactionModel;
+        $this->bank = $bankModel;
         $this->responseError = $responseError;
         $this->userRole = $userRoleModel;
     }
@@ -75,7 +76,7 @@ class UserRepository
                 ]
             );
 
-            $transaction = $this->transactionModel;
+            $transaction = $this->bank;
 
             $transaction::create(
                 [

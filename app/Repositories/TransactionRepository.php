@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\Bank;
 use App\Models\Transaction;
-use App\Utilities\ResponseError;
 use Illuminate\Support\Facades\DB;
+use App\Utilities\ResponseError;
 
 /**
  * Suppress all warnings from these two rules.
@@ -14,31 +15,89 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionRepository
 {
-    private $transactionModel;
+    private $bankModel;
     private $responseError;
+    private $transaction;
 
     public function __construct(
-        Transaction $transactionModel,
-        ResponseError $responseError
+        Bank $bankModel,
+        ResponseError $responseError,
+        Transaction $transactionModel
     ) {
-        $this->transactionModel = $transactionModel;
+        $this->bankModel = $bankModel;
         $this->responseError = $responseError;
+        $this->transaction = $transactionModel;
     }
 
-    public function rules($transferRequest)
+    public function transferRollback($userAccountId, $value)
     {
-        if ($transferRequest->payer == $transferRequest->payee) {
-            $this->responseError->validateError = 'transferYourself';
+        DB::beginTransaction();
+        try {
+            $bank = $this->bankModel;
+            $userAccount = $bank->find($userAccountId);
+            $userAccount->money = $userAccount->money + $value;
+            $userAccount->save();
+            DB::commit();
+        } catch (\Exception $err) {
+            DB::rollBack();
+            $this->responseError->error = true;
+            $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
-
-        $transactionModel = $this->transactionModel;
-        $transactionModel->Find($transferRequest->payee);
-
-        dd($transactionModel);
     }
 
-    public function transfer()
+    public function transferOut($transferRequest)
     {
+        DB::beginTransaction();
+        try {
+            $bank = $this->bankModel;
+            $payer = $bank->find($transferRequest->payer);
+            $payer->money = $payer->money - $transferRequest->value;
+            $payer->save();
+            DB::commit();
+        } catch (\Exception $err) {
+            DB::rollBack();
+            $this->responseError->error = true;
+            $this->responseError->internalError = $err->getMessage();
+            return $this->responseError;
+        }
+    }
+
+    public function transferIn($transferRequest)
+    {
+        DB::beginTransaction();
+        try {
+            $bank = $this->bankModel;
+            $payee = $bank->find($transferRequest->payee);
+            $payee->money = $payee->money + $transferRequest->value;
+            $payee->save();
+            DB::commit();
+        } catch (\Exception $err) {
+            DB::rollBack();
+            $this->responseError->error = true;
+            $this->responseError->internalError = $err->getMessage();
+            return $this->responseError;
+        }
+    }
+
+    public function transactions($transferRequest)
+    {
+        DB::beginTransaction();
+        try {
+            $transaction = $this->transaction;
+            $transaction::create(
+                [
+                    "payer_id" => $transferRequest->payer,
+                    "payee_id" => $transferRequest->payee,
+                    "value" => $transferRequest->value
+                ]
+            );
+            DB::commit();
+        } catch (\Exception $err) {
+            DB::rollBack();
+            $this->responseError->error = true;
+            $this->responseError->internalError = $err->getMessage();
+            return $this->responseError;
+        }
     }
 }

@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    protected $table = "bank";
+    protected $table = "transactions";
 
     public $fillable = [
-        'user_id',
-        'money',
+        'payer_id',
+        'payee_id',
+        'value',
     ];
 
     protected $casts = [
         'id' => 'integer',
-        'user_id' => 'integer',
-        'money' => 'float',
+        'payer_id' => 'integer',
+        'payee_id' => 'integer',
+        'value' => 'float',
     ];
 }
