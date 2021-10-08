@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Bank;
+use App\Models\Queue;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use App\Utilities\ResponseError;
@@ -18,15 +19,18 @@ class TransactionRepository
     private $bankModel;
     private $responseError;
     private $transaction;
+    private $queue;
 
     public function __construct(
         Bank $bankModel,
         ResponseError $responseError,
-        Transaction $transactionModel
+        Transaction $transactionModel,
+        Queue $queue
     ) {
         $this->bankModel = $bankModel;
         $this->responseError = $responseError;
         $this->transaction = $transactionModel;
+        $this->queue = $queue;
     }
 
     public function transferRollback($userAccountId, $value)
@@ -85,7 +89,7 @@ class TransactionRepository
         DB::beginTransaction();
         try {
             $transaction = $this->transaction;
-            $transaction::create(
+            $trasanctionSave = $transaction::create(
                 [
                     "payer_id" => $transferRequest->payer,
                     "payee_id" => $transferRequest->payee,
@@ -93,8 +97,43 @@ class TransactionRepository
                 ]
             );
             DB::commit();
+            return $trasanctionSave;
         } catch (\Exception $err) {
             DB::rollBack();
+            $this->responseError->error = true;
+            $this->responseError->internalError = $err->getMessage();
+            return $this->responseError;
+        }
+    }
+
+    public function notifyQueue($transactionId)
+    {
+        DB::beginTransaction();
+        try {
+            $this->queue::create(
+                [
+                    "transaction_id" => $transactionId,
+                ]
+            );
+
+            DB::commit();
+        } catch (\Exception $err) {
+            DB::rollBack();
+            $this->responseError->error = true;
+            $this->responseError->internalError = $err->getMessage();
+            return $this->responseError;
+        }
+    }
+
+    public function haveBalance($payerId)
+    {
+        try {
+            $haveBalance = $this->bankModel
+                ->select('money')
+                ->find($payerId);
+
+            return $haveBalance->money;
+        } catch (\Exception $err) {
             $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;

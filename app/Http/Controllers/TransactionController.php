@@ -41,6 +41,13 @@ class TransactionController extends Controller
 
     public function transfer()
     {
+        if ($this->request->payer == $this->request->payee) {
+            return response()->json(
+                ["error" => 'you can\'t transfer money to yourself'],
+                400
+            );
+        }
+
         $bodyErr = $this->transBodyValidator
             ->transaction($this->request);
 
@@ -57,5 +64,10 @@ class TransactionController extends Controller
         if (isset($transfer->error)) {
             return $this->validateError($transfer);
         }
+
+        return response()->json(
+            ['message' => 'Success Transfer'],
+            200
+        );
     }
 }
