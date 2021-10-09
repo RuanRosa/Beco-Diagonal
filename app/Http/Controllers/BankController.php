@@ -6,6 +6,12 @@ use App\Http\Resources\Accounts;
 use App\Services\BankService;
 use Illuminate\Http\Request;
 
+/**
+ * Suppress all warnings from these two rules.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
+
 class BankController extends Controller
 {
 
