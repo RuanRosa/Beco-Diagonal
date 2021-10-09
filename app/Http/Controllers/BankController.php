@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Accounts;
 use App\Services\BankService;
+use App\Utilities\BankBodyValidator;
 use Illuminate\Http\Request;
 
 /**
@@ -17,13 +18,16 @@ class BankController extends Controller
 
     private $bankService;
     private $request;
+    private $bankBodyValidator;
 
     public function __construct(
         BankService $bankService,
-        Request $request
+        Request $request,
+        BankBodyValidator $bankBodyValidator
     ) {
         $this->bankService = $bankService;
         $this->request = $request;
+        $this->bankBodyValidator = $bankBodyValidator;
     }
 
     private function validateError($dataError)
@@ -62,6 +66,16 @@ class BankController extends Controller
 
     public function deposit()
     {
+        $bodyErr = $this->bankBodyValidator
+            ->bankDeposit($this->request);
+
+        if ($bodyErr) {
+            return response()->json(
+                $bodyErr->errors(),
+                400
+            );
+        }
+
         $accountDeposit = $this->bankService
             ->deposit($this->request);
 
