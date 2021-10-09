@@ -42,12 +42,6 @@ class TransactionService
     {
         $responseError = $this->responseError;
 
-        $rules = $this->rules($request, $responseError);
-
-        if (isset($rules->error)) {
-            return $rules;
-        }
-
         $accounts = $this->bankAccountObject
             ->make($request);
 
@@ -67,6 +61,12 @@ class TransactionService
             }
         }
 
+        $rules = $this->rules($request, $responseError);
+
+        if (isset($rules->error)) {
+            return $rules;
+        }
+
         $transferOut = $this->transRepository
             ->transferOut($request);
 
@@ -78,7 +78,7 @@ class TransactionService
 
         if (isset($transferAutorization->error)) {
             $this->transRepository
-                ->transferRollback($request->payer, $request->value);
+                ->transferRollback($request->payer, $request->value, null);
             return $transferAutorization;
         }
 
@@ -87,7 +87,7 @@ class TransactionService
 
         if (isset($transferIn->internalError)) {
             $this->transRepository
-                ->transferRollback($request->payer, $request->value);
+                ->transferRollback($request->payer, $request->value, null);
             return $transferIn;
         }
 
@@ -95,6 +95,8 @@ class TransactionService
             ->transactions($request);
 
         if (isset($transactionSave->error)) {
+            $this->transRepository
+                ->transferRollback($request->payer, $request->value, $request->payee);
             return $transactionSave;
         }
 
@@ -103,9 +105,6 @@ class TransactionService
         if (isset($notify->error)) {
             $this->transRepository
                 ->notifyQueue($transactionSave->id);
-
-            $this->transRepository
-                ->transferRollback($request->payer, $request->value);
             return $notify;
         }
     }
@@ -144,7 +143,7 @@ class TransactionService
         }
         if ($notify['message'] != $success) {
             $responseError->error = true;
-            $responseError->msg = 'notify error';
+            $responseError->msg = 'notify don\'t send';
             $responseError->statusCode = $notify->status();
             return $responseError;
         }
@@ -161,7 +160,6 @@ class TransactionService
             $responseError->statusCode = 400;
             return $responseError;
         }
-
         $payerMoneyInBank = $this->transRepository
             ->haveBalance($request->payer);
 

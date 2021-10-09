@@ -13,5 +13,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->group(['prefix' => 'transactions'], function () use ($router) {
             $router->post('/transfer', 'TransactionController@transfer');
         });
+
+        $router->group(['prefix' => 'bank'], function () use ($router) {
+            $router->get('/', 'BankController@getAll');
+            $router->post('/deposit', 'BankController@deposit');
+        });
     });
 });

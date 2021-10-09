@@ -7,6 +7,7 @@ use App\Models\Queue;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use App\Utilities\ResponseError;
+use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * Suppress all warnings from these two rules.
@@ -33,14 +34,23 @@ class TransactionRepository
         $this->queue = $queue;
     }
 
-    public function transferRollback($userAccountId, $value)
+    public function transferRollback($payerId, $value, $payeeId)
     {
         DB::beginTransaction();
         try {
             $bank = $this->bankModel;
-            $userAccount = $bank->find($userAccountId);
-            $userAccount->money = $userAccount->money + $value;
-            $userAccount->save();
+
+            if ($payerId != null) {
+                $userAccount = $bank->find($payerId);
+                $userAccount->money += $value;
+                $userAccount->save();
+            }
+
+            if ($payeeId != null) {
+                $userAccount = $bank->find($payeeId);
+                $userAccount->money -= $value;
+                $userAccount->save();
+            }
             DB::commit();
         } catch (\Exception $err) {
             DB::rollBack();
@@ -56,7 +66,7 @@ class TransactionRepository
         try {
             $bank = $this->bankModel;
             $payer = $bank->find($transferRequest->payer);
-            $payer->money = $payer->money - $transferRequest->value;
+            $payer->money -= $transferRequest->value;
             $payer->save();
             DB::commit();
         } catch (\Exception $err) {
@@ -73,7 +83,7 @@ class TransactionRepository
         try {
             $bank = $this->bankModel;
             $payee = $bank->find($transferRequest->payee);
-            $payee->money = $payee->money + $transferRequest->value;
+            $payee->money += $transferRequest->value;
             $payee->save();
             DB::commit();
         } catch (\Exception $err) {
