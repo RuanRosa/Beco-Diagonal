@@ -103,7 +103,7 @@ class UserController extends Controller
 
         return response()->json(
             $dto,
-            200
+            201
         );
     }
 
@@ -130,7 +130,7 @@ class UserController extends Controller
 
         return response()->json(
             $dto,
-            200
+            201
         );
     }
 
@@ -149,7 +149,7 @@ class UserController extends Controller
 
         return response()->json(
             $dto,
-            200
+            201
         );
     }
 }

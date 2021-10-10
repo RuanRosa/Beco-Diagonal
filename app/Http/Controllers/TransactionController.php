@@ -67,7 +67,7 @@ class TransactionController extends Controller
 
         return response()->json(
             ['message' => 'Success Transfer'],
-            200
+            201
         );
     }
 }

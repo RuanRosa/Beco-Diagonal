@@ -87,7 +87,7 @@ class BankController extends Controller
 
         return response()->json(
             $dto,
-            200
+            201
         );
     }
 }
