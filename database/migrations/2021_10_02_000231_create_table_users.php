@@ -17,7 +17,7 @@ class CreateTableUsers extends Migration
 
                 $table->string('name');
 
-                $table->integer('cpf')
+                $table->bigInteger('cpf')
                     ->unique();
 
                 $table->string('email')
