@@ -36,7 +36,6 @@ class TransactionRepository
 
     public function transferRollback($payerId, $value, $payeeId)
     {
-        DB::beginTransaction();
         try {
             $bank = $this->bankModel;
 
@@ -51,9 +50,7 @@ class TransactionRepository
                 $userAccount->money -= $value;
                 $userAccount->save();
             }
-            DB::commit();
         } catch (\Exception $err) {
-            DB::rollBack();
             $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
@@ -62,7 +59,6 @@ class TransactionRepository
 
     public function transferOut($transferRequest)
     {
-        DB::beginTransaction();
         try {
             $bank = $this->bankModel;
             $payer = $bank->find($transferRequest->payer);
@@ -70,7 +66,6 @@ class TransactionRepository
             $payer->save();
             DB::commit();
         } catch (\Exception $err) {
-            DB::rollBack();
             $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
@@ -79,7 +74,6 @@ class TransactionRepository
 
     public function transferIn($transferRequest)
     {
-        DB::beginTransaction();
         try {
             $bank = $this->bankModel;
             $payee = $bank->find($transferRequest->payee);
@@ -87,7 +81,6 @@ class TransactionRepository
             $payee->save();
             DB::commit();
         } catch (\Exception $err) {
-            DB::rollBack();
             $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
@@ -96,7 +89,6 @@ class TransactionRepository
 
     public function transactions($transferRequest)
     {
-        DB::beginTransaction();
         try {
             $transaction = $this->transaction;
             $trasanctionSave = $transaction::create(
@@ -106,10 +98,8 @@ class TransactionRepository
                     "value" => $transferRequest->value
                 ]
             );
-            DB::commit();
             return $trasanctionSave;
         } catch (\Exception $err) {
-            DB::rollBack();
             $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
