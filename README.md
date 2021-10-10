@@ -29,3 +29,6 @@
 </ul>
 <p>Dobby precisa se despedir agora,Dobby irá deixar uma documentacao com você sobre a api do gringotts</p>
 <code>https://app.swaggerhub.com/apis-docs/RuanRosa/gringotts/1.0.0#/</code>
+
+<h4>Proposta de melhoria</h4>
+<p>Eu Hermione acho que poderia retirar os erros customizados, tipar as repostas das funcoes como :void e retornar exceptions</p>
