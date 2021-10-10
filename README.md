@@ -11,7 +11,7 @@
 
 <p>Para acessar Gringotts Bank é necessário ter php e algumas outras dependências guardadas em seu bolso, mas não se preocupe, nosso amigo e Bruxo Docker cuidou disso para a gente, fazendo uma magia chamada containers.</p>
 <p>Então, antes de mais nada, você precisa fazer algumas coisinhas para liberar seu acesso ao Gringotts</p>
-<p>Primerio</p>
+<p>Primeiro</p>
 <ul>
     <li>Antes de iniciar, troque o nome do nosso arquivo .env.example para .env com a magia de sua preferência</li>
     <li>Agora abra seu terminal onde se possa executar magias</li>
@@ -21,3 +21,4 @@
     <li>Agora, já podemos entrar no banco, mas precisamos de executar uma magia que irá liberar nosso acesso aos dados do banco, "irá gerar as tabelas"<code>php artisan migrate</code>. Você irá receber um alerta sobre termos de uso dizendo a seguinte menssagem, <code> Application In Production! </code>, basta aceitar com a magia do <code> yes </code> </li>
     </li>Prontinho, agora você já consegue usar as funcionalidades do gringotts</li>
 </ul>
+<p>Como usar o Gringotts Banco</p>
