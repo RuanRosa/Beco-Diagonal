@@ -64,7 +64,6 @@ class TransactionRepository
             $payer = $bank->find($transferRequest->payer);
             $payer->money -= $transferRequest->value;
             $payer->save();
-            DB::commit();
         } catch (\Exception $err) {
             $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
@@ -79,7 +78,6 @@ class TransactionRepository
             $payee = $bank->find($transferRequest->payee);
             $payee->money += $transferRequest->value;
             $payee->save();
-            DB::commit();
         } catch (\Exception $err) {
             $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
