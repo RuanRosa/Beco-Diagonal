@@ -46,6 +46,7 @@ class UserRepository
 
             return $users;
         } catch (\Exception $err) {
+            $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
@@ -91,6 +92,7 @@ class UserRepository
             return $user;
         } catch (\Exception $err) {
             DB::rollBack();
+            $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
@@ -122,6 +124,7 @@ class UserRepository
             return $user;
         } catch (\Exception $err) {
             DB::rollBack();
+            $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
@@ -158,6 +161,7 @@ class UserRepository
 
             return false;
         } catch (\Exception $err) {
+            $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
@@ -174,6 +178,7 @@ class UserRepository
 
             return $user;
         } catch (\Exception $err) {
+            $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }
@@ -191,6 +196,7 @@ class UserRepository
             return $user;
         } catch (\Exception $err) {
             DB::rollBack();
+            $this->responseError->error = true;
             $this->responseError->internalError = $err->getMessage();
             return $this->responseError;
         }

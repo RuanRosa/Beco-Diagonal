@@ -95,7 +95,6 @@ class UserController extends Controller
         $userCreate = $this->service
             ->create($this->request);
 
-
         if (isset($userCreate->error)) {
             return $this->validateError($userCreate);
         }
