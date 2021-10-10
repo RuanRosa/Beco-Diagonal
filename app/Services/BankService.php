@@ -22,7 +22,7 @@ class BankService
         ResponseError $error
     ) {
         $this->bankRepository = $bankRepository;
-        $this->erro = $error;
+        $this->error = $error;
     }
     public function getAll()
     {
