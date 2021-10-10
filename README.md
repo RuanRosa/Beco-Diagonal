@@ -22,3 +22,10 @@
     </li>Prontinho, agora você já consegue usar as funcionalidades do gringotts</li>
 </ul>
 <p>Como usar o Gringotts Banco</p>
+<ul>
+    <li>Primeiro efetue a magia de criar um usuário</li>
+    <li>depois deposite dinheiro em sua conta com a magia</li>
+    <li>Por fim, você consegue efetuar transferências</li>
+</ul>
+<p>Dobby precisa se despedir agora,Dobby irá deixar uma documentacao com você sobre a api do gringotts</p>
+<code>https://app.swaggerhub.com/apis-docs/RuanRosa/gringotts/1.0.0#/</code>
