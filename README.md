@@ -17,5 +17,5 @@
     <li>Vamos usar a magia do docker, execute para iniciar os containers <code> docker-compose up -d </code> </li>
     <li>Prontinho, agora execute a magia de acessar o container php, <code>docker-compose exec php-fpm bash</code> </li>
     <li><code>composer install</code> essa magia irá baixar as dependências que o docker guardou para a gente sobre o Gringotts</li>
-    <li>Agora, já podemos entrar no banco, mas precisamos de executar uma magia que irá liberar nosso acesso aos dados do banco, "irá gerar as tabelas"<code>php artisan migrate</code> </li>
+    <li>Agora, já podemos entrar no banco, mas precisamos de executar uma magia que irá liberar nosso acesso aos dados do banco, "irá gerar as tabelas"<code>php artisan migrate</code>. Você irá receber um alerta sobre termos de uso dizendo a seguinte menssagem, <code> Application In Production! </code>, basta aceitar com a magia do <code> yes </code> </li>
 </ul>
